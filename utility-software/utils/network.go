@@ -1,6 +1,5 @@
 package utils
 
-// You'll add network-related helper functions here (e.g., get IP)
 import (
 	"bytes"
 	"encoding/json"
@@ -9,7 +8,6 @@ import (
 	"net"
 	"net/http"
 	"system-agent/common"
-	
 )
 
 func GetLocalIP() string {
@@ -24,9 +22,7 @@ func GetLocalIP() string {
 	return "unknown"
 }
 
-
-func SendToSupabase(info *types.SystemInfo,supabaseURL string,apiKey string) error {
-
+func SendToSupabase(info *common.SystemInfo, supabaseURL string, apiKey string) error {
 	payload, err := json.Marshal(info)
 	if err != nil {
 		return err

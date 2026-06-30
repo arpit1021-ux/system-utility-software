@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Check, X, AlertTriangle, ChevronDown, ChevronUp, ChevronRight } from 'lucide-react';
+import { Check, X, AlertTriangle, ChevronDown, ChevronUp } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { useNavigate } from 'react-router-dom';
 import type { SystemRow } from '../../hooks/useSystems';
@@ -11,10 +11,10 @@ interface SystemListProps {
 export const SystemList: React.FC<SystemListProps> = ({ systems }) => {
   const { isDark } = useTheme();
   const navigate = useNavigate();
-  const [sortField, setSortField] = useState<keyof SystemRow>('Hostname');
+  const [sortField, setSortField] = useState<keyof SystemRow>('hostname');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
-  
+
   const handleSort = (field: keyof SystemRow) => {
     if (sortField === field) {
       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
@@ -23,41 +23,41 @@ export const SystemList: React.FC<SystemListProps> = ({ systems }) => {
       setSortDirection('asc');
     }
   };
-  
+
   const sortedSystems = [...systems].sort((a, b) => {
     const valueA = a[sortField];
     const valueB = b[sortField];
-    
+
     if (typeof valueA === 'string' && typeof valueB === 'string') {
-      return sortDirection === 'asc' 
-        ? valueA.localeCompare(valueB) 
+      return sortDirection === 'asc'
+        ? valueA.localeCompare(valueB)
         : valueB.localeCompare(valueA);
     }
-    
+
     if (typeof valueA === 'number' && typeof valueB === 'number') {
       return sortDirection === 'asc' ? valueA - valueB : valueB - valueA;
     }
-    
+
     if (typeof valueA === 'boolean' && typeof valueB === 'boolean') {
-      return sortDirection === 'asc' 
+      return sortDirection === 'asc'
         ? (valueA === valueB ? 0 : valueA ? -1 : 1)
         : (valueA === valueB ? 0 : valueA ? 1 : -1);
     }
-    
+
     return 0;
   });
-  
+
   const toggleExpandRow = (id: string) => {
     setExpandedRows(prev => ({
       ...prev,
       [id]: !prev[id]
     }));
   };
-  
+
   const handleRowClick = (system: SystemRow) => {
     navigate(`/system/${system.id}`);
   };
-  
+
   const renderSortIcon = (field: keyof SystemRow) => {
     if (sortField !== field) return <ChevronDown className="h-4 w-4 opacity-50" />;
     return sortDirection === 'asc' ? (
@@ -66,7 +66,7 @@ export const SystemList: React.FC<SystemListProps> = ({ systems }) => {
       <ChevronDown className="h-4 w-4" />
     );
   };
-  
+
   const renderStatusIcon = (isActive: boolean) => {
     if (isActive) {
       return <Check className="h-5 w-5 text-green-500" />;
@@ -82,56 +82,56 @@ export const SystemList: React.FC<SystemListProps> = ({ systems }) => {
           <tr>
             <th scope="col" className="p-4 text-left text-xs font-medium uppercase tracking-wider">
               <button
-                onClick={() => handleSort('Hostname')}
+                onClick={() => handleSort('hostname')}
                 className="flex items-center space-x-1 hover:text-blue-500"
               >
                 <span>System</span>
-                {renderSortIcon('Hostname')}
+                {renderSortIcon('hostname')}
               </button>
             </th>
             <th scope="col" className="p-4 text-left text-xs font-medium uppercase tracking-wider">
               <button
-                onClick={() => handleSort('OS')}
+                onClick={() => handleSort('os')}
                 className="flex items-center space-x-1 hover:text-blue-500"
               >
                 <span>OS</span>
-                {renderSortIcon('OS')}
+                {renderSortIcon('os')}
               </button>
             </th>
             <th scope="col" className="p-4 text-center text-xs font-medium uppercase tracking-wider">
               <button
-                onClick={() => handleSort('DiskEncrypted')}
+                onClick={() => handleSort('disk_encrypted')}
                 className="flex items-center justify-center space-x-1 hover:text-blue-500"
               >
                 <span>Disk Encryption</span>
-                {renderSortIcon('DiskEncrypted')}
+                {renderSortIcon('disk_encrypted')}
               </button>
             </th>
             <th scope="col" className="p-4 text-center text-xs font-medium uppercase tracking-wider">
               <button
-                onClick={() => handleSort('OSUpdated')}
+                onClick={() => handleSort('os_updated')}
                 className="flex items-center justify-center space-x-1 hover:text-blue-500"
               >
                 <span>OS Updates</span>
-                {renderSortIcon('OSUpdated')}
+                {renderSortIcon('os_updated')}
               </button>
             </th>
             <th scope="col" className="p-4 text-center text-xs font-medium uppercase tracking-wider">
               <button
-                onClick={() => handleSort('AntivirusActive')}
+                onClick={() => handleSort('antivirus_active')}
                 className="flex items-center justify-center space-x-1 hover:text-blue-500"
               >
                 <span>Antivirus</span>
-                {renderSortIcon('AntivirusActive')}
+                {renderSortIcon('antivirus_active')}
               </button>
             </th>
             <th scope="col" className="p-4 text-center text-xs font-medium uppercase tracking-wider">
               <button
-                onClick={() => handleSort('InactivitySleep')}
+                onClick={() => handleSort('inactivity_sleep')}
                 className="flex items-center justify-center space-x-1 hover:text-blue-500"
               >
                 <span>Sleep (min)</span>
-                {renderSortIcon('InactivitySleep')}
+                {renderSortIcon('inactivity_sleep')}
               </button>
             </th>
             <th scope="col" className="p-4 text-center text-xs font-medium uppercase tracking-wider">
@@ -154,14 +154,12 @@ export const SystemList: React.FC<SystemListProps> = ({ systems }) => {
         <tbody className={`divide-y ${isDark ? 'divide-gray-700' : 'divide-gray-200'}`}>
           {sortedSystems.map((system) => {
             const isExpanded = !!expandedRows[system.id];
-            const hasIssues = !system.DiskEncrypted || !system.OSUpdated || !system.AntivirusActive || system.InactivitySleep > 10;
-            const hasCriticalIssues = !system.DiskEncrypted || !system.AntivirusActive;
-            
-            // console.log(system)
+            const hasIssues = !system.disk_encrypted || !system.os_updated || !system.antivirus_active || system.inactivity_sleep > 10;
+            const hasCriticalIssues = !system.disk_encrypted || !system.antivirus_active;
 
             return (
               <React.Fragment key={system.id}>
-                <tr 
+                <tr
                   className={`${
                     isDark ? 'hover:bg-gray-700/50' : 'hover:bg-gray-50'
                   } cursor-pointer transition duration-150`}
@@ -170,47 +168,47 @@ export const SystemList: React.FC<SystemListProps> = ({ systems }) => {
                   <td className="p-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <div className={`h-8 w-8 flex-shrink-0 rounded-full flex items-center justify-center ${
-                        system.OS === 'macOS' 
+                        system.os === 'macOS'
                           ? isDark ? 'bg-blue-900/20 text-blue-400' : 'bg-blue-100 text-blue-600'
-                          : system.OS === 'Windows'
+                          : system.os === 'Windows'
                             ? isDark ? 'bg-indigo-900/20 text-indigo-400' : 'bg-indigo-100 text-indigo-600'
                             : isDark ? 'bg-green-900/20 text-green-400' : 'bg-green-100 text-green-600'
                       }`}>
-                        {system.Hostname.charAt(0).toUpperCase()}
+                        {system.hostname.charAt(0).toUpperCase()}
                       </div>
                       <div className="ml-4">
-                        <div className="font-medium">{system.Hostname}</div>
-                        <div className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{system.IP}</div>
+                        <div className="font-medium">{system.hostname}</div>
+                        <div className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{system.ip}</div>
                       </div>
                     </div>
                   </td>
                   <td className="p-4 whitespace-nowrap">
                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                      system.OS === 'macOS' 
+                      system.os === 'macOS'
                         ? isDark ? 'bg-blue-900/20 text-blue-400' : 'bg-blue-100 text-blue-800'
-                        : system.OS === 'Windows'
+                        : system.os === 'Windows'
                           ? isDark ? 'bg-indigo-900/20 text-indigo-400' : 'bg-indigo-100 text-indigo-800'
                           : isDark ? 'bg-green-900/20 text-green-400' : 'bg-green-100 text-green-800'
                     }`}>
-                      {system.OS}
+                      {system.os}
                     </span>
                   </td>
                   <td className="p-4 text-center">
-                    {renderStatusIcon(system.DiskEncrypted)}
+                    {renderStatusIcon(system.disk_encrypted)}
                   </td>
                   <td className="p-4 text-center">
-                    {renderStatusIcon(system.OSUpdated)}
+                    {renderStatusIcon(system.os_updated)}
                   </td>
                   <td className="p-4 text-center">
-                    {renderStatusIcon(system.AntivirusActive)}
+                    {renderStatusIcon(system.antivirus_active)}
                   </td>
                   <td className="p-4 text-center">
                     <span className={`${
-                      system.InactivitySleep <= 10
+                      system.inactivity_sleep <= 10
                         ? 'text-green-500'
                         : 'text-red-500'
                     }`}>
-                      {system.InactivitySleep}
+                      {system.inactivity_sleep}
                     </span>
                   </td>
                   <td className="p-4 text-center whitespace-nowrap">
@@ -232,7 +230,7 @@ export const SystemList: React.FC<SystemListProps> = ({ systems }) => {
                     )}
                   </td>
                   <td className="p-4 text-center">
-                    <button 
+                    <button
                       onClick={(e) => {
                         e.stopPropagation();
                         toggleExpandRow(system.id);
@@ -254,44 +252,44 @@ export const SystemList: React.FC<SystemListProps> = ({ systems }) => {
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                           <div>
                             <h4 className="font-medium mb-2">System Details</h4>
-                            <p><span className={isDark ? 'text-gray-400' : 'text-gray-500'}>User:</span> {system.User}</p>
-                            <p><span className={isDark ? 'text-gray-400' : 'text-gray-500'}>Serial:</span> {system.SerialNumber}</p>
-                            <p><span className={isDark ? 'text-gray-400' : 'text-gray-500'}>OS Version:</span> {system.OSVersion}</p>
+                            <p><span className={isDark ? 'text-gray-400' : 'text-gray-500'}>User:</span> {system.user}</p>
+                            <p><span className={isDark ? 'text-gray-400' : 'text-gray-500'}>Serial:</span> {system.serial_number}</p>
+                            <p><span className={isDark ? 'text-gray-400' : 'text-gray-500'}>OS Version:</span> {system.os_version}</p>
                           </div>
                           <div>
                             <h4 className="font-medium mb-2">Hardware</h4>
-                            <p><span className={isDark ? 'text-gray-400' : 'text-gray-500'}>Model:</span> {system.Model}</p>
-                            <p><span className={isDark ? 'text-gray-400' : 'text-gray-500'}>Processor:</span> {system.Processor}</p>
-                            <p><span className={isDark ? 'text-gray-400' : 'text-gray-500'}>Memory:</span> {system.Memory} GB</p>
+                            <p><span className={isDark ? 'text-gray-400' : 'text-gray-500'}>Model:</span> {system.model}</p>
+                            <p><span className={isDark ? 'text-gray-400' : 'text-gray-500'}>Processor:</span> {system.processor}</p>
+                            <p><span className={isDark ? 'text-gray-400' : 'text-gray-500'}>Memory:</span> {system.memory} GB</p>
                           </div>
                           <div>
                             <h4 className="font-medium mb-2">Security Status</h4>
                             <div className="space-y-1">
-                              {!system.DiskEncrypted && (
+                              {!system.disk_encrypted && (
                                 <div className="flex items-center text-red-500">
                                   <AlertTriangle className="h-4 w-4 mr-1" />
                                   <span>Disk encryption is disabled</span>
                                 </div>
                               )}
-                              {!system.OSUpdated && (
+                              {!system.os_updated && (
                                 <div className="flex items-center text-amber-500">
                                   <AlertTriangle className="h-4 w-4 mr-1" />
                                   <span>OS needs updating</span>
                                 </div>
                               )}
-                              {!system.AntivirusActive && (
+                              {!system.antivirus_active && (
                                 <div className="flex items-center text-red-500">
                                   <AlertTriangle className="h-4 w-4 mr-1" />
                                   <span>Antivirus is inactive</span>
                                 </div>
                               )}
-                              {system.InactivitySleep > 10 && (
+                              {system.inactivity_sleep > 10 && (
                                 <div className="flex items-center text-amber-500">
                                   <AlertTriangle className="h-4 w-4 mr-1" />
                                   <span>Sleep timeout exceeds 10 minutes</span>
                                 </div>
                               )}
-                              {system.DiskEncrypted && system.OSUpdated && system.AntivirusActive && system.InactivitySleep <= 10 && (
+                              {system.disk_encrypted && system.os_updated && system.antivirus_active && system.inactivity_sleep <= 10 && (
                                 <div className="flex items-center text-green-500">
                                   <Check className="h-4 w-4 mr-1" />
                                   <span>All security checks passed</span>

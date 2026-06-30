@@ -13,7 +13,7 @@ import (
 	"system-agent/common"
 )
 
-func CollectInfo(info *types.SystemInfo) {
+func CollectInfo(info *common.SystemInfo) {
 	//Disk Encryption
 	cmd := exec.Command("manage-bde", "-status")
 	var out bytes.Buffer

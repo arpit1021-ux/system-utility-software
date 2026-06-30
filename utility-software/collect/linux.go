@@ -4,12 +4,12 @@ package collect
 
 import (
 	"os/exec"
-	"strings"
 	"strconv"
+	"strings"
 	"system-agent/common"
 )
 
-func CollectInfo(info *types.SystemInfo) {
+func CollectInfo(info *common.SystemInfo) {
 	//Disk Encription
 
 	// Check if /dev/mapper/ is used (common for LUKS)

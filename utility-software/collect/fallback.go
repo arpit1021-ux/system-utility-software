@@ -1,4 +1,3 @@
-//fallback.go
 package collect
 
 import (
@@ -6,6 +5,6 @@ import (
 	"system-agent/common"
 )
 
-func collectInfo(info *types.SystemInfo){
+func collectInfo(info *common.SystemInfo) {
 	fmt.Println("Unknown OS")
 }

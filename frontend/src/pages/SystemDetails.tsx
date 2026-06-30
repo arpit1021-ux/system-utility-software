@@ -11,7 +11,6 @@ import {
   ChevronRight,
   AlertTriangle
 } from 'lucide-react';
-// import { mockSystemData } from '../data/mockData';
 import { useSystems } from '../hooks/useSystems';
 import { useTheme } from '../context/ThemeContext';
 
@@ -40,28 +39,28 @@ export const SystemDetails: React.FC = () => {
   }
   
   const securityIssues = [
-    !system.DiskEncrypted && { 
+    !system.disk_encrypted && { 
       id: 'disk', 
       title: 'Disk Encryption Disabled', 
       description: 'Enable FileVault or BitLocker to encrypt your disk and protect sensitive data.',
       severity: 'Critical',
       icon: <Shield />
     },
-    !system.OSUpdated && { 
-      id: 'OS', 
+    !system.os_updated && { 
+      id: 'os', 
       title: 'Operating System Outdated', 
       description: 'Update to the latest version to ensure security patches are applied.',
       severity: 'Warning',
       icon: <RefreshCw />
     },
-    !system.AntivirusActive && { 
+    !system.antivirus_active && { 
       id: 'av', 
       title: 'Antivirus Inactive', 
       description: 'Enable your antivirus software to protect against malware and viruses.',
       severity: 'Critical',
       icon: <Shield />
     },
-    system.InactivitySleep > 10 && { 
+    system.inactivity_sleep > 10 && { 
       id: 'sleep', 
       title: 'Sleep Timeout Too Long', 
       description: 'Set sleep timeout to 10 minutes or less to secure your system when inactive.',
@@ -85,7 +84,7 @@ export const SystemDetails: React.FC = () => {
           </button>
           <div>
             <h1 className="text-2xl font-bold flex items-center">
-              {system.Hostname}
+              {system.hostname}
               {hasCriticalIssues ? (
                 <span className="ml-2 px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400">
                   Critical Issues
@@ -101,7 +100,7 @@ export const SystemDetails: React.FC = () => {
               )}
             </h1>
             <p className={`mt-1 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-              Last checked {system.last_checkin} • {system.OS} {system.OSVersion}
+              Last checked {system.last_checkin} • {system.os} {system.os_version}
             </p>
           </div>
         </div>
@@ -169,27 +168,27 @@ export const SystemDetails: React.FC = () => {
                   <dl className="grid grid-cols-1 gap-y-4">
                     <div>
                       <dt className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Hostname</dt>
-                      <dd className="mt-1 text-sm font-medium">{system.Hostname}</dd>
+                      <dd className="mt-1 text-sm font-medium">{system.hostname}</dd>
                     </div>
                     <div>
                       <dt className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>IP Address</dt>
-                      <dd className="mt-1 text-sm font-medium">{system.IP}</dd>
+                      <dd className="mt-1 text-sm font-medium">{system.ip}</dd>
                     </div>
                     <div>
                       <dt className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Operating System</dt>
-                      <dd className="mt-1 text-sm font-medium">{system.OS} {system.OSVersion}</dd>
+                      <dd className="mt-1 text-sm font-medium">{system.os} {system.os_version}</dd>
                     </div>
                     <div>
                       <dt className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Model</dt>
-                      <dd className="mt-1 text-sm font-medium">{system.Model}</dd>
+                      <dd className="mt-1 text-sm font-medium">{system.model}</dd>
                     </div>
                     <div>
                       <dt className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Serial Number</dt>
-                      <dd className="mt-1 text-sm font-medium">{system.SerialNumber}</dd>
+                      <dd className="mt-1 text-sm font-medium">{system.serial_number}</dd>
                     </div>
                     <div>
                       <dt className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>User</dt>
-                      <dd className="mt-1 text-sm font-medium">{system.User}</dd>
+                      <dd className="mt-1 text-sm font-medium">{system.user}</dd>
                     </div>
                   </dl>
                 </div>
@@ -201,11 +200,11 @@ export const SystemDetails: React.FC = () => {
                   <dl className="grid grid-cols-1 gap-y-4">
                     <div>
                       <dt className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Processor</dt>
-                      <dd className="mt-1 text-sm font-medium">{system.Processor}</dd>
+                      <dd className="mt-1 text-sm font-medium">{system.processor}</dd>
                     </div>
                     <div>
                       <dt className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Memory</dt>
-                      <dd className="mt-1 text-sm font-medium">{system.Memory} GB</dd>
+                      <dd className="mt-1 text-sm font-medium">{system.memory} GB</dd>
                     </div>
                     <div>
                       <dt className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Disk Space</dt>
@@ -222,7 +221,7 @@ export const SystemDetails: React.FC = () => {
                         <Shield className="h-5 w-5 mr-3" />
                         <span>Disk Encryption</span>
                       </div>
-                      {system.DiskEncrypted ? (
+                      {system.disk_encrypted ? (
                         <span className="text-green-500"><Check className="h-5 w-5" /></span>
                       ) : (
                         <span className="text-red-500"><X className="h-5 w-5" /></span>
@@ -233,7 +232,7 @@ export const SystemDetails: React.FC = () => {
                         <RefreshCw className="h-5 w-5 mr-3" />
                         <span>OS Updates</span>
                       </div>
-                      {system.OSUpdated ? (
+                      {system.os_updated ? (
                         <span className="text-green-500"><Check className="h-5 w-5" /></span>
                       ) : (
                         <span className="text-amber-500"><X className="h-5 w-5" /></span>
@@ -244,7 +243,7 @@ export const SystemDetails: React.FC = () => {
                         <Shield className="h-5 w-5 mr-3" />
                         <span>Antivirus</span>
                       </div>
-                      {system.AntivirusActive ? (
+                      {system.antivirus_active ? (
                         <span className="text-green-500"><Check className="h-5 w-5" /></span>
                       ) : (
                         <span className="text-red-500"><X className="h-5 w-5" /></span>
@@ -255,10 +254,10 @@ export const SystemDetails: React.FC = () => {
                         <Clock className="h-5 w-5 mr-3" />
                         <span>Sleep Timeout</span>
                       </div>
-                      {system.InactivitySleep <= 10 ? (
-                        <span className="text-green-500">{system.InactivitySleep} min</span>
+                      {system.inactivity_sleep <= 10 ? (
+                        <span className="text-green-500">{system.inactivity_sleep} min</span>
                       ) : (
-                        <span className="text-amber-500">{system.InactivitySleep} min</span>
+                        <span className="text-amber-500">{system.inactivity_sleep} min</span>
                       )}
                     </div>
                   </div>
@@ -275,44 +274,42 @@ export const SystemDetails: React.FC = () => {
                   <div className="divide-y divide-gray-200 dark:divide-gray-700">
                     {securityIssues.map(issue => (
                       issue && (
-                                <div key={issue.id} className="py-4">
-                                  <div className="flex">
-                                    <div className={`flex-shrink-0 ${
-                                      issue.severity === 'Critical'
-                                        ? 'text-red-500'
-                                        : 'text-amber-500'
-                                    }`}>
-                                      <AlertTriangle className="h-6 w-6" />
-                                    </div>
-                                    <div className="ml-3 flex-1">
-                                      <div className="flex items-center justify-between">
-                                        <h4 className="text-base font-medium">
-                                          {issue.title}
-                                          <span className={`ml-2 px-2 py-0.5 rounded text-xs ${
-                                            issue.severity === 'Critical'
-                                              ? 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400'
-                                              : 'bg-amber-100 text-amber-800 dark:bg-amber-900/20 dark:text-amber-400'
-                                          }`}>
-                                            {issue.severity}
-                                          </span>
-                                        </h4>
-                                        <button className={`
-                                          text-sm font-medium px-3 py-1 rounded-md
-                                          ${isDark ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-100 hover:bg-gray-200'}
-                                        `}>
-                                          Fix Issue
-                                        </button>
-                                      </div>
-                                      <p className={`mt-1 text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                                        {issue.description}
-                                      </p>
-                                    </div>
-                                  </div>
-                                </div>
-                              )
-                            )
-                          )
-                        }
+                        <div key={issue.id} className="py-4">
+                          <div className="flex">
+                            <div className={`flex-shrink-0 ${
+                              issue.severity === 'Critical'
+                                ? 'text-red-500'
+                                : 'text-amber-500'
+                            }`}>
+                              <AlertTriangle className="h-6 w-6" />
+                            </div>
+                            <div className="ml-3 flex-1">
+                              <div className="flex items-center justify-between">
+                                <h4 className="text-base font-medium">
+                                  {issue.title}
+                                  <span className={`ml-2 px-2 py-0.5 rounded text-xs ${
+                                    issue.severity === 'Critical'
+                                      ? 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400'
+                                      : 'bg-amber-100 text-amber-800 dark:bg-amber-900/20 dark:text-amber-400'
+                                  }`}>
+                                    {issue.severity}
+                                  </span>
+                                </h4>
+                                <button className={`
+                                  text-sm font-medium px-3 py-1 rounded-md
+                                  ${isDark ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-100 hover:bg-gray-200'}
+                                `}>
+                                  Fix Issue
+                                </button>
+                              </div>
+                              <p className={`mt-1 text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                                {issue.description}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    ))}
                   </div>
                 </div>
               ) : (
@@ -426,7 +423,7 @@ export const SystemDetails: React.FC = () => {
                           Jun 23, 2:45 PM
                         </td>
                         <td className="px-6 py-4 text-sm">
-                          Sleep timeout changed to {system.InactivitySleep} minutes
+                          Sleep timeout changed to {system.inactivity_sleep} minutes
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400">

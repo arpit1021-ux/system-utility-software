@@ -39,10 +39,10 @@ export const Header: React.FC = () => {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    const results = systems.filter(system => 
-      system.Hostname.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      system.IP.includes(searchQuery) ||
-      system.OS.toLowerCase().includes(searchQuery.toLowerCase())
+    const results = systems.filter(system =>
+      system.hostname.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      system.ip.includes(searchQuery) ||
+      system.os.toLowerCase().includes(searchQuery.toLowerCase())
     );
     
     if (results.length === 1) {

@@ -1,31 +1,27 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"log"
 	"os"
 	"runtime"
-	"bufio"
 	"strings"
 	"system-agent/collect"
 	"system-agent/utils"
+
 	"github.com/joho/godotenv"
-	"log"
 )
 
-var supabaseURL string
-var apiKey string
-
 func main() {
-
-	err := godotenv.Load();
+	err := godotenv.Load()
 	if err != nil {
 		log.Println("No .env file found")
 	}
 
+	supabaseURL := os.Getenv("SUPABASE_URL")
+	apiKey := os.Getenv("API_KEY")
 
-	supabaseURL = os.Getenv("SUPABASE_URL")
-	apiKey      = os.Getenv("API_KEY")
-	
 	fmt.Println("Starting system agent...")
 
 	if !utils.IsAdmin() {
@@ -42,26 +38,23 @@ func main() {
 		return
 	}
 
-	ownerID = strings.TrimSpace(ownerID)	
+	ownerID = strings.TrimSpace(ownerID)
 
 	info := collect.GetCommonInfo()
-	fmt.Print("executing Collect info :")
+	fmt.Println("Executing Collect info...")
 	switch runtime.GOOS {
-	case "windows":
-		collect.CollectInfo(&info)
-	case "linux":
-		collect.CollectInfo(&info)
-	case "darwin":
+	case "windows", "linux", "darwin":
 		collect.CollectInfo(&info)
 	default:
 		fmt.Println("Unsupported platform")
+		os.Exit(1)
 	}
 
-	info.OwnerID=ownerID
+	info.OwnerID = ownerID
 
 	fmt.Printf("Collected info: %+v\n", info)
 
-	err = utils.SendToSupabase(&info,supabaseURL,apiKey)
+	err = utils.SendToSupabase(&info, supabaseURL, apiKey)
 	if err != nil {
 		fmt.Println("Failed to send data:", err)
 	} else {

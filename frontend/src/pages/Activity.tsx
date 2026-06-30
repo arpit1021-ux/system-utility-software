@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { useTheme } from '../context/ThemeContext';
-// import { mockSystemData } from '../data/mockData';
 import { useSystems } from '../hooks/useSystems';
-import { Clock, AlertTriangle, Shield, RefreshCw, ChevronDown,  } from 'lucide-react';
+import { Clock, AlertTriangle, Shield, RefreshCw, ChevronDown } from 'lucide-react';
 import { DownloadConfigButton } from '../components/dashboard/DownloadConfigButton';
 
 interface ActivityLog {
@@ -28,57 +27,55 @@ export const Activity: React.FC = () => {
     }, 1000);
   };
 
-  // Generate mock activity logs based on system data
   const activityLogs: ActivityLog[] = systems.flatMap(system => {
     const logs: ActivityLog[] = [];
     
-    if (!system.DiskEncrypted) {
+    if (!system.disk_encrypted) {
       logs.push({
         id: `${system.id}-disk`,
         timestamp: '2 hours ago',
-        system: system.Hostname,
+        system: system.hostname,
         event: 'Disk Encryption Check',
         type: 'critical',
         details: 'Disk encryption is disabled'
       });
     }
     
-    if (!system.OSUpdated) {
+    if (!system.os_updated) {
       logs.push({
         id: `${system.id}-os`,
         timestamp: '3 hours ago',
-        system: system.Hostname,
+        system: system.hostname,
         event: 'OS Update Check',
         type: 'warning',
         details: 'Operating system requires updates'
       });
     }
     
-    if (!system.AntivirusActive) {
+    if (!system.antivirus_active) {
       logs.push({
         id: `${system.id}-av`,
         timestamp: '1 hour ago',
-        system: system.Hostname,
+        system: system.hostname,
         event: 'Antivirus Check',
         type: 'critical',
         details: 'Antivirus is not active'
       });
     }
     
-    if (system.InactivitySleep > 15) {
+    if (system.inactivity_sleep > 15) {
       logs.push({
         id: `${system.id}-sleep`,
         timestamp: '4 hours ago',
-        system: system.Hostname,
+        system: system.hostname,
         event: 'Sleep Settings Check',
         type: 'warning',
-        details: `Sleep timeout is set to ${system.InactivitySleep} minutes`
+        details: `Sleep timeout is set to ${system.inactivity_sleep} minutes`
       });
     }
     
     return logs;
   }).sort((a, b) => {
-    // Sort by timestamp (mock sorting since we're using relative times)
     const timeA = a.timestamp.includes('hour') ? parseInt(a.timestamp) : 24;
     const timeB = b.timestamp.includes('hour') ? parseInt(b.timestamp) : 24;
     return timeA - timeB;

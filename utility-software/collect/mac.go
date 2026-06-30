@@ -4,13 +4,13 @@ package collect
 
 import (
 	"os/exec"
-	"strings"
-	"strconv"
 	"regexp"
+	"strconv"
+	"strings"
 	"system-agent/common"
 )
 
-func CollectInfo(info *types.SystemInfo) {
+func CollectInfo(info *common.SystemInfo) {
 
 	//Disk-Encrypted
 

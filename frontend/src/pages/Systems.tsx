@@ -1,7 +1,6 @@
 import React from 'react';
 import { useTheme } from '../context/ThemeContext';
 import { SystemList } from '../components/dashboard/SystemList';
-// import { systems } from '../data/mockData';
 import { useSystems } from '../hooks/useSystems';
 import { Server, RefreshCw, ChevronDown } from 'lucide-react';
 import { DownloadConfigButton } from '../components/dashboard/DownloadConfigButton';
@@ -92,10 +91,10 @@ export const Systems: React.FC = () => {
               <h2 className="text-lg font-medium">Healthy Systems</h2>
               <p className="mt-1 text-3xl font-semibold">
                 {systems.filter(sys => 
-                  sys.DiskEncrypted && 
-                  sys.OSUpdated && 
-                  sys.AntivirusActive && 
-                  sys.InactivitySleep <= 10
+                  sys.disk_encrypted && 
+                  sys.os_updated && 
+                  sys.antivirus_active && 
+                  sys.inactivity_sleep <= 10
                 ).length}
               </p>
             </div>
@@ -115,10 +114,10 @@ export const Systems: React.FC = () => {
               <h2 className="text-lg font-medium">Systems with Issues</h2>
               <p className="mt-1 text-3xl font-semibold">
                 {systems.filter(sys => 
-                  !sys.DiskEncrypted || 
-                  !sys.OSUpdated || 
-                  !sys.AntivirusActive || 
-                  sys.InactivitySleep > 10
+                  !sys.disk_encrypted || 
+                  !sys.os_updated || 
+                  !sys.antivirus_active || 
+                  sys.inactivity_sleep > 10
                 ).length}
               </p>
             </div>

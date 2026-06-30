@@ -6,17 +6,28 @@ import (
 	"runtime"
 	"strings"
 
-	"system-agent/utils"
 	"system-agent/common"
+	"system-agent/utils"
 
 	"github.com/shirou/gopsutil/v3/cpu"
 	"github.com/shirou/gopsutil/v3/host"
 	"github.com/shirou/gopsutil/v3/mem"
 )
 
+func getOSName(goOS string) string {
+	switch goOS {
+	case "darwin":
+		return "macOS"
+	case "windows":
+		return "Windows"
+	case "linux":
+		return "Linux"
+	default:
+		return goOS
+	}
+}
 
-
-func GetCommonInfo() types.SystemInfo {
+func GetCommonInfo() common.SystemInfo {
 	hostname, _ := os.Hostname()
 	user := os.Getenv("USER")
 	if user == "" {
@@ -28,9 +39,8 @@ func GetCommonInfo() types.SystemInfo {
 	vmem, _ := mem.VirtualMemory()
 
 	model := hInfo.Platform
-	serial := hInfo.HostID // Best effort, not always available
+	serial := hInfo.HostID
 
-	// If model is empty, try fallback on Linux
 	if model == "" && runtime.GOOS == "linux" {
 		out, err := exec.Command("cat", "/sys/devices/virtual/dmi/id/product_name").Output()
 		if err == nil {
@@ -38,17 +48,16 @@ func GetCommonInfo() types.SystemInfo {
 		}
 	}
 
-	// Simple IP placeholder for now
 	ip := utils.GetLocalIP()
 
-	return types.SystemInfo{
+	return common.SystemInfo{
 		Hostname:     hostname,
 		IP:           ip,
-		OS:           runtime.GOOS,
+		OS:           getOSName(runtime.GOOS),
 		OSVersion:    hInfo.PlatformVersion,
 		Model:        model,
 		Processor:    cpuInfo[0].ModelName,
-		Memory:       int(vmem.Total / 1024 / 1024), // In MB
+		Memory:       int(vmem.Total / 1024 / 1024),
 		SerialNumber: serial,
 		User:         user,
 	}

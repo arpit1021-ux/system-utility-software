@@ -1,7 +1,6 @@
 import React from 'react';
 import { HardDrive, Database, Server } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
-// import { mockSystemData } from '../data/mockData';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useSystems } from '../hooks/useSystems';
 
@@ -10,14 +9,14 @@ export const Storage: React.FC = () => {
   const { systems } = useSystems();
 
   const storageData = systems.map(system => ({
-    name: system.Hostname,
+    name: system.hostname,
     total: Math.floor(Math.random() * 900) + 100,
     used: Math.floor(Math.random() * 800) + 100,
   }));
 
   const totalStorage = storageData.reduce((acc, curr) => acc + curr.total, 0);
   const usedStorage = storageData.reduce((acc, curr) => acc + curr.used, 0);
-  const averageUsage = Math.round((usedStorage / totalStorage) * 100);
+  const averageUsage = totalStorage > 0 ? Math.round((usedStorage / totalStorage) * 100) : 0;
 
   return (
     <div className="space-y-6">

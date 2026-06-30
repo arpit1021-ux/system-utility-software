@@ -46,64 +46,64 @@ export type Database = {
       }
       systems: {
         Row: {
-          AntivirusActive: boolean
+          antivirus_active: boolean
           created_at: string
-          DiskEncrypted: boolean
-          Hostname: string
+          disk_encrypted: boolean
+          hostname: string
           id: string
-          InactivitySleep: number
-          IP: string
+          inactivity_sleep: number
+          ip: string
           last_checkin: string
-          Memory: number
-          Model: string
-          OS: string
-          OSUpdated: boolean
-          OSVersion: string
+          memory: number
+          model: string
+          os: string
+          os_updated: boolean
+          os_version: string
           owner_id: string | null
-          Processor: string
-          SerialNumber: string
+          processor: string
+          serial_number: string
           updated_at: string
-          User: string
+          user: string
         }
         Insert: {
-          AntivirusActive?: boolean
+          antivirus_active?: boolean
           created_at?: string
-          DiskEncrypted?: boolean
-          Hostname: string
+          disk_encrypted?: boolean
+          hostname: string
           id?: string
-          InactivitySleep?: number
-          IP: string
+          inactivity_sleep?: number
+          ip: string
           last_checkin?: string
-          Memory: number
-          Model: string
-          OS: string
-          OSUpdated?: boolean
-          OSVersion: string
+          memory: number
+          model: string
+          os: string
+          os_updated?: boolean
+          os_version: string
           owner_id?: string | null
-          Processor: string
-          SerialNumber: string
+          processor: string
+          serial_number: string
           updated_at?: string
-          User: string
+          user: string
         }
         Update: {
-          AntivirusActive?: boolean
+          antivirus_active?: boolean
           created_at?: string
-          DiskEncrypted?: boolean
-          Hostname?: string
+          disk_encrypted?: boolean
+          hostname?: string
           id?: string
-          InactivitySleep?: number
-          IP?: string
+          inactivity_sleep?: number
+          ip?: string
           last_checkin?: string
-          Memory?: number
-          Model?: string
-          OS?: string
-          OSUpdated?: boolean
-          OSVersion?: string
+          memory?: number
+          model?: string
+          os?: string
+          os_updated?: boolean
+          os_version?: string
           owner_id?: string | null
-          Processor?: string
-          SerialNumber?: string
+          processor?: string
+          serial_number?: string
           updated_at?: string
-          User?: string
+          user?: string
         }
         Relationships: []
       }

@@ -1,7 +1,6 @@
 import React from 'react';
 import { AlertTriangle, Shield, Clock } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
-// import { mockSystemData } from '../data/mockData';
 import { useSystems } from '../hooks/useSystems';
 
 export const Alerts: React.FC = () => {
@@ -11,45 +10,45 @@ export const Alerts: React.FC = () => {
   const alerts = systems
     .map(system => {
       const issues = [];
-      if (!system.DiskEncrypted) {
+      if (!system.disk_encrypted) {
         issues.push({
           id: `${system.id}-disk`,
           type: 'critical',
           title: 'Disk Encryption Disabled',
-          message: `${system.Hostname} has disk encryption disabled`,
+          message: `${system.hostname} has disk encryption disabled`,
           icon: Shield,
           timestamp: new Date().toISOString(),
           system
         });
       }
-      if (!system.OSUpdated) {
+      if (!system.os_updated) {
         issues.push({
           id: `${system.id}-os`,
           type: 'warning',
           title: 'OS Update Required',
-          message: `${system.Hostname} requires operating system update`,
+          message: `${system.hostname} requires operating system update`,
           icon: AlertTriangle,
           timestamp: new Date().toISOString(),
           system
         });
       }
-      if (!system.AntivirusActive) {
+      if (!system.antivirus_active) {
         issues.push({
           id: `${system.id}-av`,
           type: 'critical',
           title: 'Antivirus Inactive',
-          message: `${system.Hostname} antivirus is not running`,
+          message: `${system.hostname} antivirus is not running`,
           icon: Shield,
           timestamp: new Date().toISOString(),
           system
         });
       }
-      if (system.InactivitySleep > 10) {
+      if (system.inactivity_sleep > 10) {
         issues.push({
           id: `${system.id}-sleep`,
           type: 'warning',
           title: 'Sleep Timeout Too Long',
-          message: `${system.Hostname} sleep timeout exceeds recommended 10 minutes`,
+          message: `${system.hostname} sleep timeout exceeds recommended 10 minutes`,
           icon: Clock,
           timestamp: new Date().toISOString(),
           system

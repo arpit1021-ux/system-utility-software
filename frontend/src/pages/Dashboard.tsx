@@ -6,8 +6,7 @@ import {
   Clock, 
   Server, 
   RefreshCw,
-  ChevronDown,
-  Download
+  ChevronDown
 } from 'lucide-react';
 import {DownloadConfigButton} from '../components/dashboard/DownloadConfigButton'
 import { SystemCard } from '../components/dashboard/SystemCard';
@@ -48,17 +47,16 @@ export const Dashboard: React.FC = () => {
     );
   }
 
-  // Calculate summary statistics
   const totalSystems = systems.length;
 
   const systemsWithIssues = systems.filter(system => 
-    !system.DiskEncrypted || 
-    !system.OSUpdated || 
-    !system.AntivirusActive || 
-    system.InactivitySleep > 10
+    !system.disk_encrypted || 
+    !system.os_updated || 
+    !system.antivirus_active || 
+    system.inactivity_sleep > 10
   ).length;
   const criticalIssues = systems.filter(system => 
-    !system.DiskEncrypted || !system.AntivirusActive
+    !system.disk_encrypted || !system.antivirus_active
   ).length;
 
   return (
@@ -180,12 +178,12 @@ export const Dashboard: React.FC = () => {
               ? systems 
               : activeTab === 'issues' 
                 ? systems.filter(sys => 
-                    !sys.DiskEncrypted || 
-                    !sys.OSUpdated || 
-                    !sys.AntivirusActive || 
-                    sys.InactivitySleep > 10)
+                    !sys.disk_encrypted || 
+                    !sys.os_updated || 
+                    !sys.antivirus_active || 
+                    sys.inactivity_sleep > 10)
                 : systems.filter(sys => 
-                    !sys.DiskEncrypted || !sys.AntivirusActive)
+                    !sys.disk_encrypted || !sys.antivirus_active)
             } 
           />
         </div>
@@ -197,42 +195,42 @@ export const Dashboard: React.FC = () => {
           <SystemCard 
             title="Disk Encryption" 
             icon={<Shield />}
-            status={systems.filter(sys => sys.DiskEncrypted).length}
+            status={systems.filter(sys => sys.disk_encrypted).length}
             total={totalSystems}
             color="blue"
           />
           <SystemCard 
             title="OS Updates" 
             icon={<RefreshCw />}
-            status={systems.filter(sys => sys.OSUpdated).length}
+            status={systems.filter(sys => sys.os_updated).length}
             total={totalSystems}
             color="teal"
           />
           <SystemCard 
             title="Antivirus Status" 
             icon={<Shield />}
-            status={systems.filter(sys => sys.AntivirusActive).length}
+            status={systems.filter(sys => sys.antivirus_active).length}
             total={totalSystems}
             color="emerald"
           />
           <SystemCard 
             title="Sleep Settings" 
             icon={<Clock />}
-            status={systems.filter(sys => sys.InactivitySleep <= 10).length}
+            status={systems.filter(sys => sys.inactivity_sleep <= 10).length}
             total={totalSystems}
             color="amber"
           />
           <SystemCard 
             title="macOS Systems" 
             icon={<Server />}
-            status={systems.filter(sys => sys.OS === 'macOS').length}
+            status={systems.filter(sys => sys.os === 'macOS').length}
             total={totalSystems}
             color="indigo"
           />
           <SystemCard 
             title="Windows Systems" 
             icon={<Server />}
-            status={systems.filter(sys => sys.OS === 'Windows').length}
+            status={systems.filter(sys => sys.os === 'Windows').length}
             total={totalSystems}
             color="purple"
           />
