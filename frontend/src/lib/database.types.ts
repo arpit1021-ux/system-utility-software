@@ -49,6 +49,8 @@ export type Database = {
           antivirus_active: boolean
           created_at: string
           disk_encrypted: boolean
+          disk_total_gb: number
+          disk_used_gb: number
           hostname: string
           id: string
           inactivity_sleep: number
@@ -69,6 +71,8 @@ export type Database = {
           antivirus_active?: boolean
           created_at?: string
           disk_encrypted?: boolean
+          disk_total_gb?: number
+          disk_used_gb?: number
           hostname: string
           id?: string
           inactivity_sleep?: number
@@ -89,6 +93,8 @@ export type Database = {
           antivirus_active?: boolean
           created_at?: string
           disk_encrypted?: boolean
+          disk_total_gb?: number
+          disk_used_gb?: number
           hostname?: string
           id?: string
           inactivity_sleep?: number

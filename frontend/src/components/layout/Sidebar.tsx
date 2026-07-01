@@ -16,7 +16,7 @@ import { useAuth } from '../../context/AuthContext';
 
 export const Sidebar: React.FC = () => {
   const { isDark } = useTheme();
-  const { signOut } = useAuth();
+  const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
 
@@ -73,7 +73,7 @@ export const Sidebar: React.FC = () => {
         </button>
       </div>
 
-      <nav className="flex-1 overflow-y-auto py-4">
+      <nav className="overflow-y-auto py-4">
         <ul className="space-y-1 px-2">
           {navItems.map((item) => (
             <li key={item.name}>
@@ -102,12 +102,12 @@ export const Sidebar: React.FC = () => {
       <div className={`p-4 ${isDark ? 'border-gray-700' : 'border-gray-200'} border-t`}>
         <div className={`flex items-center ${collapsed ? 'justify-center' : ''}`}>
           <div className="h-8 w-8 rounded-full bg-gradient-to-r from-blue-500 to-teal-500 flex items-center justify-center text-white font-semibold">
-            A
+            {(user?.email?.[0] || 'U').toUpperCase()}
           </div>
           {!collapsed && (
             <div className="ml-3 flex-1">
-              <p className="font-medium">Admin User</p>
-              <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>admin@example.com</p>
+              <p className="font-medium">{user?.email?.split('@')[0] || 'User'}</p>
+              <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{user?.email || ''}</p>
             </div>
           )}
           <button

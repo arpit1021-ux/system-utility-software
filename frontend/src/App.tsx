@@ -14,6 +14,7 @@ import { AuthProvider } from './context/AuthContext';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { useAuth } from './context/AuthContext';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, loading } = useAuth();
@@ -41,18 +42,20 @@ function App() {
               path="*"
               element={
                 <PrivateRoute>
-                  <Layout>
-                    <Routes>
-                      <Route path="/" element={<Dashboard />} />
-                      <Route path="/systems" element={<Systems />} />
-                      <Route path="/system/:id" element={<SystemDetails />} />
-                      <Route path="/alerts" element={<Alerts />} />
-                      <Route path="/security" element={<Security />} />
-                      <Route path="/storage" element={<Storage />} />
-                      <Route path="/activity" element={<Activity />} />
-                      <Route path="/settings" element={<Settings />} />
-                    </Routes>
-                  </Layout>
+                  <ErrorBoundary>
+                    <Layout>
+                      <Routes>
+                        <Route path="/" element={<Dashboard />} />
+                        <Route path="/systems" element={<Systems />} />
+                        <Route path="/system/:id" element={<SystemDetails />} />
+                        <Route path="/alerts" element={<Alerts />} />
+                        <Route path="/security" element={<Security />} />
+                        <Route path="/storage" element={<Storage />} />
+                        <Route path="/activity" element={<Activity />} />
+                        <Route path="/settings" element={<Settings />} />
+                      </Routes>
+                    </Layout>
+                  </ErrorBoundary>
                 </PrivateRoute>
               }
             />

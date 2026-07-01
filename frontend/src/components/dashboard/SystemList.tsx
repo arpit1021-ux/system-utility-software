@@ -204,11 +204,13 @@ export const SystemList: React.FC<SystemListProps> = ({ systems }) => {
                   </td>
                   <td className="p-4 text-center">
                     <span className={`${
-                      system.inactivity_sleep <= 10
+                      system.inactivity_sleep === 0
                         ? 'text-green-500'
-                        : 'text-red-500'
+                        : system.inactivity_sleep <= 10
+                          ? 'text-green-500'
+                          : 'text-red-500'
                     }`}>
-                      {system.inactivity_sleep}
+                      {system.inactivity_sleep === 0 ? 'Never' : system.inactivity_sleep}
                     </span>
                   </td>
                   <td className="p-4 text-center whitespace-nowrap">
@@ -260,7 +262,7 @@ export const SystemList: React.FC<SystemListProps> = ({ systems }) => {
                             <h4 className="font-medium mb-2">Hardware</h4>
                             <p><span className={isDark ? 'text-gray-400' : 'text-gray-500'}>Model:</span> {system.model}</p>
                             <p><span className={isDark ? 'text-gray-400' : 'text-gray-500'}>Processor:</span> {system.processor}</p>
-                            <p><span className={isDark ? 'text-gray-400' : 'text-gray-500'}>Memory:</span> {system.memory} GB</p>
+                            <p><span className={isDark ? 'text-gray-400' : 'text-gray-500'}>Memory:</span> {(system.memory / 1024).toFixed(1)} GB</p>
                           </div>
                           <div>
                             <h4 className="font-medium mb-2">Security Status</h4>

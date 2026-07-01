@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+*.exe
+*.dll
+*.bin
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Agent binaries
+utility-software/myagent
+utility-software/myapp
+
+# Mimocode internal
+.mimocode/

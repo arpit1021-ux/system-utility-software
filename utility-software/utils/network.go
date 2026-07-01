@@ -28,7 +28,7 @@ func SendToSupabase(info *common.SystemInfo, supabaseURL string, apiKey string) 
 		return err
 	}
 
-	url := supabaseURL + "/rest/v1/systems"
+	url := supabaseURL + "/rest/v1/systems?on_conflict=hostname"
 
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(payload))
 	if err != nil {
@@ -38,7 +38,7 @@ func SendToSupabase(info *common.SystemInfo, supabaseURL string, apiKey string) 
 	req.Header.Set("apikey", apiKey)
 	req.Header.Set("Authorization", "Bearer "+apiKey)
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Prefer", "return=representation")
+	req.Header.Set("Prefer", "return=representation,resolution=merge-duplicates")
 
 	client := &http.Client{}
 	resp, err := client.Do(req)

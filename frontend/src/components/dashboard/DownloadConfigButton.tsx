@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Download } from 'lucide-react';
-import { supabase } from '../../lib/supabase'; // Adjust path based on your project
+import { supabase } from '../../lib/supabase';
 import { useTheme } from '../../context/ThemeContext';
 import { AuthError, User } from '@supabase/supabase-js';
 
@@ -9,7 +9,6 @@ export const DownloadConfigButton = () => {
   const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState<AuthError | null>(null);
 
-  // Fetch user on mount
   useEffect(() => {
     const getUser = async () => {
       const { data, error } = await supabase.auth.getUser();
@@ -29,18 +28,23 @@ export const DownloadConfigButton = () => {
       return;
     }
 
-    const config = {
-      owner_id: user.id,
-    };
+    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+    const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-    const blob = new Blob([JSON.stringify(config, null, 2)], {
-      type: 'application/json',
+    const config = `SUPABASE_URL=${supabaseUrl}
+API_KEY=${supabaseKey}
+OWNER_ID=${user.id}
+CHECK_INTERVAL_MINUTES=30
+`;
+
+    const blob = new Blob([config], {
+      type: 'text/plain',
     });
 
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = 'agent-config.json';
+    link.download = '.env';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -50,6 +54,7 @@ export const DownloadConfigButton = () => {
   return (
     <button
       onClick={handleDownload}
+      title="Download agent config"
       className={`p-2 rounded-md ${
         isDark ? 'bg-gray-800 hover:bg-gray-700' : 'bg-white hover:bg-gray-100'
       } border ${

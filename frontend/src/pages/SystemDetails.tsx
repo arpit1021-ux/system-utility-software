@@ -1,27 +1,39 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { 
-  ArrowLeft, 
-  Shield, 
-  RefreshCw, 
-  Clock, 
-  Check, 
-  X, 
+import {
+  ArrowLeft,
+  Shield,
+  RefreshCw,
+  Clock,
+  Check,
+  X,
   MoreVertical,
   ChevronRight,
-  AlertTriangle
+  AlertTriangle,
+  Trash2
 } from 'lucide-react';
 import { useSystems } from '../hooks/useSystems';
 import { useTheme } from '../context/ThemeContext';
+import { supabase } from '../lib/supabase';
 
 export const SystemDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { isDark } = useTheme();
-  const { systems } = useSystems();
+  const { systems, loading, refetch } = useSystems();
   const [activeTab, setActiveTab] = useState('overview');
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   
   const system = systems.find(sys => sys.id === id);
+
+  if (loading) {
+    return (
+      <div className="text-center p-8">
+        <p className={`text-lg ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Loading...</p>
+      </div>
+    );
+  }
   
   if (!system) {
     return (
@@ -38,6 +50,21 @@ export const SystemDetails: React.FC = () => {
     );
   }
   
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  };
+
+  const handleDelete = async () => {
+    if (!id) return;
+    const { error } = await supabase.from('systems').delete().eq('id', id);
+    if (!error) {
+      navigate('/systems');
+    }
+    setMenuOpen(false);
+  };
+
   const securityIssues = [
     !system.disk_encrypted && { 
       id: 'disk', 
@@ -105,20 +132,59 @@ export const SystemDetails: React.FC = () => {
           </div>
         </div>
         <div className="flex items-center space-x-2">
-          <button className={`px-3 py-1.5 rounded-md text-sm font-medium ${
-            isDark 
-              ? 'bg-blue-800 text-white hover:bg-blue-700' 
+          <button
+            onClick={handleRefresh}
+            disabled={refreshing}
+            className={`px-3 py-1.5 rounded-md text-sm font-medium ${
+            isDark
+              ? 'bg-blue-800 text-white hover:bg-blue-700'
               : 'bg-blue-600 text-white hover:bg-blue-700'
-            }`}
+            } ${refreshing ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
-            Run Check Now
+            {refreshing ? 'Refreshing...' : 'Run Check Now'}
           </button>
           <div className="relative">
-            <button className={`p-2 rounded-md ${
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className={`p-2 rounded-md ${
               isDark ? 'hover:bg-gray-700' : 'hover:bg-gray-100'
             }`}>
               <MoreVertical className="h-5 w-5" />
             </button>
+            {menuOpen && (
+              <div className={`absolute right-0 mt-1 w-48 rounded-md shadow-lg z-10 ${
+                isDark ? 'bg-gray-700 border border-gray-600' : 'bg-white border border-gray-200'
+              }`}>
+                <button
+                  onClick={() => { navigate('/alerts'); setMenuOpen(false); }}
+                  className={`w-full text-left px-4 py-2 text-sm flex items-center ${
+                    isDark ? 'text-gray-300 hover:bg-gray-600' : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  <AlertTriangle className="h-4 w-4 mr-2" />
+                  View Alerts
+                </button>
+                <button
+                  onClick={() => { navigate('/security'); setMenuOpen(false); }}
+                  className={`w-full text-left px-4 py-2 text-sm flex items-center ${
+                    isDark ? 'text-gray-300 hover:bg-gray-600' : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  <Shield className="h-4 w-4 mr-2" />
+                  Security Report
+                </button>
+                <hr className={`my-1 ${isDark ? 'border-gray-600' : 'border-gray-200'}`} />
+                <button
+                  onClick={handleDelete}
+                  className={`w-full text-left px-4 py-2 text-sm flex items-center ${
+                    isDark ? 'text-red-400 hover:bg-gray-600' : 'text-red-600 hover:bg-gray-100'
+                  }`}
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Delete System
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -204,11 +270,15 @@ export const SystemDetails: React.FC = () => {
                     </div>
                     <div>
                       <dt className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Memory</dt>
-                      <dd className="mt-1 text-sm font-medium">{system.memory} GB</dd>
+                      <dd className="mt-1 text-sm font-medium">{(system.memory / 1024).toFixed(1)} GB</dd>
                     </div>
                     <div>
                       <dt className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Disk Space</dt>
-                      <dd className="mt-1 text-sm font-medium">500 GB (78% used)</dd>
+                      <dd className="mt-1 text-sm font-medium">
+                        {system.disk_total_gb > 0
+                          ? `${system.disk_total_gb} GB (${system.disk_used_gb} GB used)`
+                          : 'No data'}
+                      </dd>
                     </div>
                   </dl>
                 </div>
@@ -254,7 +324,9 @@ export const SystemDetails: React.FC = () => {
                         <Clock className="h-5 w-5 mr-3" />
                         <span>Sleep Timeout</span>
                       </div>
-                      {system.inactivity_sleep <= 10 ? (
+                      {system.inactivity_sleep === 0 ? (
+                        <span className="text-green-500">Never</span>
+                      ) : system.inactivity_sleep <= 10 ? (
                         <span className="text-green-500">{system.inactivity_sleep} min</span>
                       ) : (
                         <span className="text-amber-500">{system.inactivity_sleep} min</span>

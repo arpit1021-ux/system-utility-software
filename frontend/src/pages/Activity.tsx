@@ -3,9 +3,11 @@ import { useTheme } from '../context/ThemeContext';
 import { useSystems } from '../hooks/useSystems';
 import { Clock, AlertTriangle, Shield, RefreshCw, ChevronDown } from 'lucide-react';
 import { DownloadConfigButton } from '../components/dashboard/DownloadConfigButton';
+import { useNavigate } from 'react-router-dom';
 
 interface ActivityLog {
   id: string;
+  systemId: string;
   timestamp: string;
   system: string;
   event: string;
@@ -16,6 +18,7 @@ interface ActivityLog {
 export const Activity: React.FC = () => {
   const { isDark } = useTheme();
   const { systems } = useSystems();
+  const navigate = useNavigate();
   const [timeRange, setTimeRange] = useState('24h');
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [filterType, setFilterType] = useState<'all' | 'warning' | 'critical'>('all');
@@ -33,6 +36,7 @@ export const Activity: React.FC = () => {
     if (!system.disk_encrypted) {
       logs.push({
         id: `${system.id}-disk`,
+        systemId: system.id,
         timestamp: '2 hours ago',
         system: system.hostname,
         event: 'Disk Encryption Check',
@@ -44,6 +48,7 @@ export const Activity: React.FC = () => {
     if (!system.os_updated) {
       logs.push({
         id: `${system.id}-os`,
+        systemId: system.id,
         timestamp: '3 hours ago',
         system: system.hostname,
         event: 'OS Update Check',
@@ -55,6 +60,7 @@ export const Activity: React.FC = () => {
     if (!system.antivirus_active) {
       logs.push({
         id: `${system.id}-av`,
+        systemId: system.id,
         timestamp: '1 hour ago',
         system: system.hostname,
         event: 'Antivirus Check',
@@ -66,6 +72,7 @@ export const Activity: React.FC = () => {
     if (system.inactivity_sleep > 15) {
       logs.push({
         id: `${system.id}-sleep`,
+        systemId: system.id,
         timestamp: '4 hours ago',
         system: system.hostname,
         event: 'Sleep Settings Check',
@@ -258,7 +265,9 @@ export const Activity: React.FC = () => {
                         {log.timestamp}
                       </span>
                     </div>
-                    <button className={`text-sm font-medium ${
+                    <button
+                      onClick={() => navigate(`/system/${log.systemId}`)}
+                      className={`text-sm font-medium ${
                       isDark ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-700'
                     }`}>
                       View Details

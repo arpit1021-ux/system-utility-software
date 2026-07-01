@@ -15,4 +15,6 @@ type SystemInfo struct {
 	InactivitySleep int    `json:"inactivity_sleep"`
 	OSUpdated       bool   `json:"os_updated"`
 	OwnerID         string `json:"owner_id"`
+	DiskTotalGB     int    `json:"disk_total_gb"`
+	DiskUsedGB      int    `json:"disk_used_gb"`
 }

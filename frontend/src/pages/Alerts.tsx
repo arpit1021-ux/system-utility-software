@@ -2,10 +2,12 @@ import React from 'react';
 import { AlertTriangle, Shield, Clock } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { useSystems } from '../hooks/useSystems';
+import { useNavigate } from 'react-router-dom';
 
 export const Alerts: React.FC = () => {
   const { isDark } = useTheme();
   const { systems } = useSystems();
+  const navigate = useNavigate();
 
   const alerts = systems
     .map(system => {
@@ -153,7 +155,9 @@ export const Alerts: React.FC = () => {
                       <span className={`text-sm ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
                         {new Date(alert.timestamp).toLocaleString()}
                       </span>
-                      <button className={`text-sm font-medium ${
+                      <button
+                        onClick={() => navigate(`/system/${alert.system.id}`)}
+                        className={`text-sm font-medium ${
                         isDark ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-700'
                       }`}>
                         View Details

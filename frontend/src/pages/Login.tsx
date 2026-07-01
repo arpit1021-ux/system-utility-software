@@ -20,8 +20,8 @@ export const Login: React.FC = () => {
       setLoading(true);
       await signIn(email, password);
       navigate('/');
-    } catch (err) {
-      setError('Failed to sign in');
+    } catch (err: any) {
+      setError(err?.message || 'Failed to sign in');
     } finally {
       setLoading(false);
     }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
 import type { Database } from '../lib/database.types';
 import { useAuth } from '../context/AuthContext';
@@ -9,7 +9,10 @@ export function useSystems() {
   const [systems, setSystems] = useState<SystemRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [refreshKey, setRefreshKey] = useState(0);
   const { user } = useAuth();
+
+  const refetch = useCallback(() => setRefreshKey(k => k + 1), []);
 
   useEffect(() => {
     async function fetchSystems() {
@@ -25,7 +28,7 @@ export function useSystems() {
         const { data, error } = await supabase
           .from('systems')
           .select('*')
-        //   .eq('owner_id', user.id);
+          .eq('owner_id', user.id);
 
         if (error) {
           throw error;
@@ -40,7 +43,7 @@ export function useSystems() {
     }
 
     fetchSystems();
-  }, [user]);
+  }, [user, refreshKey]);
 
-  return { systems, loading, error };
+  return { systems, loading, error, refetch };
 }
